@@ -11,7 +11,7 @@ import { getDevice, getDeviceOptions } from './utils/devices.js';
 // Application state
 const state = {
     calendarType: 'year',
-    deviceId: 'iphone15pro',
+    deviceId: 'iphone15',
     accentColor: '#ff6b6b',
     // Life calendar specific
     birthDate: new Date(1990, 0, 1),
@@ -56,7 +56,21 @@ function setupEventListeners() {
     // Accent color picker
     document.getElementById('accentColor')?.addEventListener('input', (e) => {
         state.accentColor = e.target.value;
+        updateColorSwatches();
         updatePreview();
+    });
+
+    // Color swatches
+    document.querySelectorAll('.color-swatch').forEach(swatch => {
+        swatch.addEventListener('click', () => {
+            const color = swatch.dataset.color;
+            if (color) {
+                state.accentColor = color;
+                document.getElementById('accentColor').value = color;
+                updateColorSwatches();
+                updatePreview();
+            }
+        });
     });
 
     // Birth date input
@@ -124,6 +138,17 @@ function updateOptionsVisibility() {
 }
 
 /**
+ * Update color swatch active states
+ */
+function updateColorSwatches() {
+    document.querySelectorAll('.color-swatch').forEach(swatch => {
+        const swatchColor = swatch.dataset.color?.toLowerCase();
+        const currentColor = state.accentColor.toLowerCase();
+        swatch.classList.toggle('active', swatchColor === currentColor);
+    });
+}
+
+/**
  * Update the preview canvas
  */
 function updatePreview() {
@@ -155,9 +180,17 @@ function updatePreview() {
             break;
     }
 
-    // Scale canvas for preview
+    // Scale canvas for preview inside phone frame
+    const phoneFrame = document.querySelector('.phone-frame');
     const container = document.querySelector('.preview-container');
-    if (container) {
+    if (container && phoneFrame) {
+        const maxHeight = Math.min(container.clientHeight - 60, 500);
+        const scale = maxHeight / canvas.height;
+        const scaledWidth = canvas.width * scale;
+        const scaledHeight = canvas.height * scale;
+        canvas.style.width = `${scaledWidth}px`;
+        canvas.style.height = `${scaledHeight}px`;
+    } else if (container) {
         const maxHeight = container.clientHeight - 40;
         const scale = maxHeight / canvas.height;
         canvas.style.width = `${canvas.width * scale}px`;
