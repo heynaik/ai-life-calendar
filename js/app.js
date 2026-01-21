@@ -276,14 +276,14 @@ function downloadWallpaper() {
 
 /**
  * Copy dynamic URL for iOS Shortcuts
- * Format: render.html?type=year&width=1179&height=2556&accent=ff6b6b
+ * Format: api/render?type=year&width=1179&height=2556&accent=ff6b6b
  */
 function copyDynamicUrl() {
     import('./utils/devices.js').then(({ getDevice }) => {
         const device = getDevice(state.deviceId);
-        const baseUrl = window.location.origin + window.location.pathname;
+        const baseUrl = window.location.origin;
 
-        // Use width and height parameters for iOS Shortcuts compatibility
+        // Use /api/render for direct image generation
         const params = new URLSearchParams({
             type: state.calendarType,
             width: device.width,
@@ -299,7 +299,7 @@ function copyDynamicUrl() {
             params.set('title', state.goalTitle);
         }
 
-        const url = `${baseUrl}render.html?${params.toString()}`;
+        const url = `${baseUrl}/api/render?${params.toString()}`;
 
         navigator.clipboard.writeText(url).then(() => {
             const btn = document.getElementById('copyUrlBtn');
