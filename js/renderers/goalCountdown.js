@@ -23,22 +23,24 @@ function daysBetween(startDate, endDate) {
  */
 export function renderGoalCountdown(canvas, options = {}) {
     const {
-        deviceId = 'iphone15pro',
+        deviceId = 'iphone15',
         targetDate = new Date(new Date().getFullYear(), 11, 31), // Default: end of year
         goalTitle = 'Goal',
         startDate = null, // If null, calculates from beginning of year
         accentColor = '#ff6b6b',
         backgroundColor = '#000000',
         progressColor = '#ffffff',
-        emptyColor = '#333333'
+        emptyColor = '#333333',
+        customWidth,
+        customHeight
     } = options;
 
     const device = getDevice(deviceId);
     const ctx = canvas.getContext('2d');
 
-    // Set canvas dimensions
-    canvas.width = device.width;
-    canvas.height = device.height;
+    // Use custom dimensions if provided, otherwise use device preset
+    canvas.width = customWidth || device.width;
+    canvas.height = customHeight || device.height;
 
     // Fill background
     ctx.fillStyle = backgroundColor;

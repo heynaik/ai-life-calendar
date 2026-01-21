@@ -32,15 +32,39 @@
         import { renderYearCalendar } from './js/renderers/yearCalendar.js';
         import { renderLifeCalendar } from './js/renderers/lifeCalendar.js';
         import { renderGoalCountdown } from './js/renderers/goalCountdown.js';
+        import { getDevice, DEVICES } from './js/utils/devices.js';
 
         // Parse URL parameters
         const params = new URLSearchParams(window.location.search);
         const type = params.get('type') || 'year';
-        const deviceId = params.get('device') || 'iphone15pro';
         const accentColor = '#' + (params.get('accent') || 'ff6b6b');
 
+        // Support both width/height params and device ID
+        let width, height;
+        const widthParam = params.get('width');
+        const heightParam = params.get('height');
+        const deviceId = params.get('device') || 'iphone15';
+
+        if (widthParam && heightParam) {
+            // Use direct width/height parameters
+            width = parseInt(widthParam);
+            height = parseInt(heightParam);
+        } else {
+            // Fallback to device preset
+            const device = getDevice(deviceId);
+            width = device.width;
+            height = device.height;
+        }
+
         const canvas = document.getElementById('renderCanvas');
-        const options = { deviceId, accentColor };
+
+        // Create custom options with explicit dimensions
+        const options = {
+            accentColor,
+            customWidth: width,
+            customHeight: height,
+            deviceId // Keep for safe area calculations
+        };
 
         switch (type) {
             case 'year':

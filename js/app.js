@@ -276,34 +276,41 @@ function downloadWallpaper() {
 
 /**
  * Copy dynamic URL for iOS Shortcuts
+ * Format: render.html?type=year&width=1179&height=2556&accent=ff6b6b
  */
 function copyDynamicUrl() {
-    const baseUrl = window.location.origin + window.location.pathname;
-    const params = new URLSearchParams({
-        type: state.calendarType,
-        device: state.deviceId,
-        accent: state.accentColor.replace('#', '')
-    });
+    import('./utils/devices.js').then(({ getDevice }) => {
+        const device = getDevice(state.deviceId);
+        const baseUrl = window.location.origin + window.location.pathname;
 
-    if (state.calendarType === 'life') {
-        params.set('birth', state.birthDate.toISOString().split('T')[0]);
-        params.set('expectancy', state.lifeExpectancy);
-    } else if (state.calendarType === 'goal') {
-        params.set('target', state.targetDate.toISOString().split('T')[0]);
-        params.set('title', state.goalTitle);
-    }
+        // Use width and height parameters for iOS Shortcuts compatibility
+        const params = new URLSearchParams({
+            type: state.calendarType,
+            width: device.width,
+            height: device.height,
+            accent: state.accentColor.replace('#', '')
+        });
 
-    const url = `${baseUrl}render.html?${params.toString()}`;
+        if (state.calendarType === 'life') {
+            params.set('birth', state.birthDate.toISOString().split('T')[0]);
+            params.set('expectancy', state.lifeExpectancy);
+        } else if (state.calendarType === 'goal') {
+            params.set('target', state.targetDate.toISOString().split('T')[0]);
+            params.set('title', state.goalTitle);
+        }
 
-    navigator.clipboard.writeText(url).then(() => {
-        const btn = document.getElementById('copyUrlBtn');
-        const originalText = btn.textContent;
-        btn.textContent = 'Copied!';
-        btn.classList.add('success');
-        setTimeout(() => {
-            btn.textContent = originalText;
-            btn.classList.remove('success');
-        }, 2000);
+        const url = `${baseUrl}render.html?${params.toString()}`;
+
+        navigator.clipboard.writeText(url).then(() => {
+            const btn = document.getElementById('copyUrlBtn');
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> Copied!`;
+            btn.classList.add('success');
+            setTimeout(() => {
+                btn.innerHTML = originalHTML;
+                btn.classList.remove('success');
+            }, 2000);
+        });
     });
 }
 

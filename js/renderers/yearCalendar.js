@@ -33,19 +33,21 @@ function getDayOfYear(date) {
  */
 export function renderYearCalendar(canvas, options = {}) {
     const {
-        deviceId = 'iphone15pro',
+        deviceId = 'iphone15',
         accentColor = '#ff6b6b',
         backgroundColor = '#000000',
         dotColor = '#ffffff',
-        emptyDotColor = '#333333'
+        emptyDotColor = '#333333',
+        customWidth,
+        customHeight
     } = options;
 
     const device = getDevice(deviceId);
     const ctx = canvas.getContext('2d');
 
-    // Set canvas dimensions
-    canvas.width = device.width;
-    canvas.height = device.height;
+    // Use custom dimensions if provided, otherwise use device preset
+    canvas.width = customWidth || device.width;
+    canvas.height = customHeight || device.height;
 
     // Fill background
     ctx.fillStyle = backgroundColor;

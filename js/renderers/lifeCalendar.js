@@ -24,21 +24,23 @@ function getWeeksLived(birthDate) {
  */
 export function renderLifeCalendar(canvas, options = {}) {
     const {
-        deviceId = 'iphone15pro',
+        deviceId = 'iphone15',
         birthDate = new Date(1990, 0, 1),
         lifeExpectancy = 80,
         accentColor = '#ff6b6b',
         backgroundColor = '#000000',
         filledColor = '#ffffff',
-        emptyColor = '#222222'
+        emptyColor = '#222222',
+        customWidth,
+        customHeight
     } = options;
 
     const device = getDevice(deviceId);
     const ctx = canvas.getContext('2d');
 
-    // Set canvas dimensions
-    canvas.width = device.width;
-    canvas.height = device.height;
+    // Use custom dimensions if provided, otherwise use device preset
+    canvas.width = customWidth || device.width;
+    canvas.height = customHeight || device.height;
 
     // Fill background
     ctx.fillStyle = backgroundColor;
