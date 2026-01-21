@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Life Calendar - Render</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        canvas {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="renderCanvas"></canvas>
+
+    <script type="module">
+        import { renderYearCalendar } from './js/renderers/yearCalendar.js';
+        import { renderLifeCalendar } from './js/renderers/lifeCalendar.js';
+        import { renderGoalCountdown } from './js/renderers/goalCountdown.js';
+
+        // Parse URL parameters
+        const params = new URLSearchParams(window.location.search);
+        const type = params.get('type') || 'year';
+        const deviceId = params.get('device') || 'iphone15pro';
+        const accentColor = '#' + (params.get('accent') || 'ff6b6b');
+
+        const canvas = document.getElementById('renderCanvas');
+        const options = { deviceId, accentColor };
+
+        switch (type) {
+            case 'year':
+                renderYearCalendar(canvas, options);
+                break;
+            case 'life':
+                const birth = params.get('birth');
+                const expectancy = parseInt(params.get('expectancy')) || 80;
+                renderLifeCalendar(canvas, {
+                    ...options,
+                    birthDate: birth ? new Date(birth) : new Date(1990, 0, 1),
+                    lifeExpectancy: expectancy
+                });
+                break;
+            case 'goal':
+                const target = params.get('target');
+                const title = params.get('title') || 'Goal';
+                renderGoalCountdown(canvas, {
+                    ...options,
+                    targetDate: target ? new Date(target) : new Date(new Date().getFullYear(), 11, 31),
+                    goalTitle: decodeURIComponent(title)
+                });
+                break;
+        }
+
+        // For iOS Shortcuts - convert to image data URL
+        if (params.get('download') === 'true') {
+            const link = document.createElement('a');
+            link.download = `${type}-calendar.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+    </script>
+</body>
+
+</html>

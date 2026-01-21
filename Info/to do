@@ -1,0 +1,303 @@
+Product Requirements Document (PRD)
+
+Product Name
+
+AI Life Calendar (working title)
+
+⸻
+
+1. Purpose & Vision
+
+Purpose
+
+AI Life Calendar is a web-based tool that transforms time (life, year, or goals) into a living, auto-updating lock‑screen wallpaper. It helps users feel time passing, not just track it.
+
+Vision
+
+To become the most emotionally impactful, minimalist time-awareness product — without requiring a mobile app.
+
+Core idea: Time → Visual → Emotion → Action
+
+⸻
+
+2. Problem Statement
+	•	People intellectually know time is limited, but don’t emotionally feel it.
+	•	Existing calendars, reminders, and planners lack emotional resonance.
+	•	Mobile apps add friction; wallpapers are seen 100+ times per day.
+
+⸻
+
+3. Solution Overview
+
+AI Life Calendar generates dynamic wallpapers that update automatically using:
+	•	A web-based configuration flow
+	•	A dynamic image-rendering URL
+	•	iOS Shortcuts automation
+
+No app. No login. No App Store.
+
+⸻
+
+4. Target Users
+
+Primary Users
+	•	Founders & entrepreneurs
+	•	Creators & builders
+	•	Productivity & mindfulness enthusiasts
+
+Secondary Users
+	•	Students
+	•	Coaches / mentors
+	•	Self‑improvement audiences
+
+⸻
+
+5. User Goals & Jobs To Be Done
+
+User Goal	Job To Be Done
+Feel time passing	Visualize progress daily
+Stay intentional	See remaining time clearly
+Build habits	Get passive daily reminders
+Stay motivated	See goals approaching
+
+
+⸻
+
+6. Core Use Cases (MVP)
+
+UC‑1: Year Calendar Wallpaper
+	•	Visualize progress of the current year
+	•	Each dot = one day
+	•	Current day highlighted
+
+UC‑2: Life Calendar Wallpaper
+	•	Visualize life in weeks
+	•	Weeks lived vs remaining
+
+UC‑3: Goal Countdown Wallpaper
+	•	Countdown to a specific future date
+	•	Used for age milestones, launches, deadlines
+
+⸻
+
+7. User Flow (End‑to‑End)
+	1.	User visits website
+	2.	Selects calendar type (Year / Life / Goal)
+	3.	Clicks Install
+	4.	Configures wallpaper:
+	•	Layout style
+	•	Device model
+	5.	Website generates a dynamic image URL
+	6.	User follows step‑by‑step iOS Shortcut instructions
+	7.	Wallpaper auto‑updates daily
+
+⸻
+
+8. Functional Requirements
+
+8.1 Configuration Wizard
+	•	Calendar type selector
+	•	Layout selector
+	•	Device selector
+	•	Copy dynamic image URL
+
+8.2 Dynamic Image Rendering API
+
+Endpoint example:
+
+/render?type=year&layout=days&device=iphone15
+
+The endpoint must:
+	•	Calculate progress based on current date
+	•	Render correct layout
+	•	Return image (SVG or PNG)
+
+8.3 Device Presets
+
+Each device preset defines:
+	•	Width
+	•	Height
+	•	Safe margins
+
+Example:
+	•	iPhone Pro Max
+	•	iPhone Pro
+	•	Standard iPhone
+
+8.4 Wallpaper Output
+	•	Lock‑screen optimized
+	•	No cropping required
+	•	Dark, minimalist design
+
+⸻
+
+9. AI Features (Phase‑1 Optional)
+
+AI Responsibilities
+	•	Generate short motivational or reflective text
+	•	Enhance emotional impact
+
+AI Constraints
+	•	Max 12 words
+	•	Minimalist tone
+	•	No emojis
+
+Example Outputs
+	•	“You’ve lived 29% of this year.”
+	•	“3,214 weeks remain. Use them.”
+
+⸻
+
+10. Non‑Functional Requirements
+
+Performance
+	•	Image render time < 1 second
+
+Reliability
+	•	URL must always return a valid image
+
+Scalability
+	•	Stateless rendering
+	•	Edge‑friendly deployment
+
+Security & Privacy
+	•	No user data storage
+	•	No authentication required
+
+⸻
+
+11. Design Guidelines
+
+Design Principles
+	•	Minimalist, calm, high-contrast
+	•	Emotion-first, data-second
+	•	Zero visual clutter
+	•	Designed primarily for lock screens
+
+Visual Style
+	•	Background: Pure black / very dark gray
+	•	Foreground: White dots / blocks
+	•	Accent: Single highlight color (configurable)
+	•	Typography: Clean, neutral sans-serif
+
+Grid System
+	•	Year view: 365 / 366 dots (days)
+	•	Life view: Weeks as blocks (52 columns)
+	•	Consistent spacing and margins
+
+Safe Areas
+	•	Respect iOS lock screen clock & widgets
+	•	Top 20–25% reserved for system UI
+
+⸻
+
+12. Tech Stack (Free & Open)
+
+Frontend
+	•	HTML5
+	•	CSS3 (no frameworks initially)
+	•	Vanilla JavaScript (ES6+)
+
+Rendering
+	•	SVG (primary)
+	•	Canvas API (for PNG export)
+
+Hosting (Free Tier)
+	•	Vercel or Netlify
+
+AI (Optional, Phase 1.5)
+	•	OpenAI API (use free credits initially)
+	•	Abstracted behind a service layer
+
+Automation
+	•	Apple iOS Shortcuts (user-side)
+
+⸻
+
+13. Free Google Resources Usage
+	•	Google Fonts (Inter / Roboto / DM Sans)
+	•	Google Chrome DevTools for testing
+	•	Google Lighthouse for performance checks
+	•	Google Search Console (post-launch, optional)
+
+No paid Google services required.
+
+⸻
+
+14. Version Control & GitHub Strategy
+
+Repository Setup
+	•	Single GitHub repository (public)
+	•	Monorepo structure:
+	•	/frontend
+	•	/render
+	•	/assets
+
+GitHub Usage (Verbal / As Needed)
+	•	GitHub Issues for feature tracking
+	•	GitHub Projects (optional Kanban)
+	•	README as living documentation
+
+CI/CD
+	•	Auto-deploy via Vercel / Netlify GitHub integration
+
+⸻
+
+12. Out‑of‑Scope (MVP)
+	•	Android automation
+	•	User accounts
+	•	Payment system
+	•	App Store distribution
+	•	Social features
+
+⸻
+
+13. Success Metrics
+
+MVP Success
+	•	Time to generate wallpaper < 2 minutes
+	•	50% users complete installation flow
+
+Engagement
+	•	Daily wallpaper refresh active
+	•	Organic sharing/screenshots
+
+⸻
+
+14. Risks & Mitigations
+
+Risk	Mitigation
+iOS shortcut friction	Clear step‑by‑step UI
+Wallpaper cropping	Strict device presets
+AI overuse	Keep AI optional
+
+
+⸻
+
+15. Launch Strategy
+	•	Soft launch via founder communities
+	•	Shareable screenshots
+	•	Product Hunt / Indie launch later
+
+⸻
+
+16. Future Enhancements
+	•	Founder Mode
+	•	Life phases (20s, 30s, etc.)
+	•	Auto‑theming
+	•	Android support
+	•	Saved profiles
+
+⸻
+
+17. Definition of MVP Completion
+
+The product is MVP‑ready when:
+	•	Dynamic wallpaper updates daily
+	•	No manual user action after setup
+	•	Zero paid dependencies
+
+⸻
+
+Document Owner: Product / Founder
+Status: Ready for Design & Engineering
