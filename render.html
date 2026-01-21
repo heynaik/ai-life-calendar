@@ -4,35 +4,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Life Calendar - Render</title>
+    <title>AI Life Calendar - Wallpaper</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body {
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
             background: #000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Inter', system-ui, sans-serif;
+            color: #fff;
+        }
+
+        .message {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .message h2 {
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .message p {
+            color: #888;
+            font-size: 14px;
+        }
+
+        .dimensions {
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            font-size: 12px;
+            color: #666;
         }
 
         canvas {
-            display: block;
+            display: none;
+        }
+
+        /* Preview for browsers */
+        .preview-img {
+            max-width: 300px;
+            max-height: 60vh;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            margin-bottom: 20px;
         }
     </style>
 </head>
 
 <body>
     <canvas id="renderCanvas"></canvas>
+    <img id="previewImg" class="preview-img" alt="Wallpaper Preview">
+    <div class="message">
+        <h2>✅ Wallpaper Generated</h2>
+        <p>Your wallpaper is downloading...</p>
+        <div class="dimensions" id="dimensionsInfo"></div>
+    </div>
 
     <script type="module">
         import { renderYearCalendar } from './js/renderers/yearCalendar.js';
         import { renderLifeCalendar } from './js/renderers/lifeCalendar.js';
         import { renderGoalCountdown } from './js/renderers/goalCountdown.js';
-        import { getDevice, DEVICES } from './js/utils/devices.js';
+        import { getDevice } from './js/utils/devices.js';
 
         // Parse URL parameters
         const params = new URLSearchParams(window.location.search);
@@ -58,14 +104,15 @@
 
         const canvas = document.getElementById('renderCanvas');
 
-        // Create custom options with explicit dimensions
+        // Create options with explicit dimensions
         const options = {
             accentColor,
             customWidth: width,
             customHeight: height,
-            deviceId // Keep for safe area calculations
+            deviceId
         };
 
+        // Render the calendar
         switch (type) {
             case 'year':
                 renderYearCalendar(canvas, options);
@@ -90,13 +137,35 @@
                 break;
         }
 
-        // For iOS Shortcuts - convert to image data URL
-        if (params.get('download') === 'true') {
-            const link = document.createElement('a');
-            link.download = `${type}-calendar.png`;
-            link.href = canvas.toDataURL('image/png');
-            link.click();
-        }
+        // Display dimensions info
+        document.getElementById('dimensionsInfo').textContent = `${width} × ${height} pixels`;
+
+        // Convert canvas to PNG data URL
+        const imageDataUrl = canvas.toDataURL('image/png');
+
+        // Show preview
+        document.getElementById('previewImg').src = imageDataUrl;
+
+        // Auto-download the image
+        const filename = `${type}-calendar-${width}x${height}.png`;
+
+        // Create download link and trigger
+        const downloadLink = document.createElement('a');
+        downloadLink.href = imageDataUrl;
+        downloadLink.download = filename;
+
+        // Small delay to ensure rendering is complete
+        setTimeout(() => {
+            downloadLink.click();
+        }, 100);
+
+        // For iOS Shortcuts - also expose as blob URL for "Get Contents of URL"
+        canvas.toBlob((blob) => {
+            if (blob) {
+                window.wallpaperBlob = blob;
+                window.wallpaperUrl = URL.createObjectURL(blob);
+            }
+        }, 'image/png');
     </script>
 </body>
 
