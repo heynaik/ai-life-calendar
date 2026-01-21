@@ -144,20 +144,20 @@
         const imageDataUrl = canvas.toDataURL('image/png');
 
         // Show preview
-        document.getElementById('previewImg').src = imageDataUrl;
+        const previewImg = document.getElementById('previewImg');
+        previewImg.src = imageDataUrl;
 
-        // Auto-download the image
-        const filename = `${type}-calendar-${width}x${height}.png`;
+        // Allow manual download by clicking the image
+        previewImg.onclick = () => {
+            const filename = `${type}-calendar-${width}x${height}.png`;
+            const link = document.createElement('a');
+            link.download = filename;
+            link.href = imageDataUrl;
+            link.click();
+        };
 
-        // Create download link and trigger
-        const downloadLink = document.createElement('a');
-        downloadLink.href = imageDataUrl;
-        downloadLink.download = filename;
-
-        // Small delay to ensure rendering is complete
-        setTimeout(() => {
-            downloadLink.click();
-        }, 100);
+        // Update message
+        document.querySelector('.message p').textContent = 'Long-press image to save or set as wallpaper';
 
         // For iOS Shortcuts - also expose as blob URL for "Get Contents of URL"
         canvas.toBlob((blob) => {
